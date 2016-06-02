@@ -32,6 +32,7 @@ type Exporter struct {
 	duration          prometheus.Gauge
 	totalScrapes      prometheus.Counter
 	error             prometheus.Gauge
+	totalErrors       prometheus.Counter
 
 	bufQueueLength    *prometheus.GaugeVec // buffer_queue_length
 	bufTotalQueueSize *prometheus.GaugeVec // buffer_total_queued_size
@@ -71,9 +72,13 @@ func NewExporter(endpoint string, namespace string, timeout time.Duration) *Expo
 		error: prometheus.NewGauge(prometheus.GaugeOpts{
 			Namespace: namespace,
 			Name:      "last_scrape_error",
-			Help:      "TWhether the last scrape of metrics from Fluentd resulted in an error (1 for error, 0 for success).",
+			Help:      "Whether the last scrape of metrics from Fluentd resulted in an error (1 for error, 0 for success).",
 		}),
-
+		totalErrors: prometheus.NewCounter(prometheus.CounterOpts{
+			Namespace: namespace,
+			Name:      "scrape_errors_total",
+			Help:      "Total count of error scraping Fluentd.",
+		}),
 		bufQueueLength: prometheus.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: namespace,
 			Name:      "buffer_queue_length",
@@ -115,6 +120,7 @@ func (e *Exporter) Collect(ch chan <- prometheus.Metric) {
 	ch <- e.duration
 	ch <- e.totalScrapes
 	ch <- e.error
+	ch <- e.totalErrors
 
 	e.bufQueueLength.Collect(ch)
 	e.bufTotalQueueSize.Collect(ch)
@@ -149,13 +155,13 @@ func (e *Exporter) scrape(pluginChan chan <- plugin) {
 	bodyBytes, err := e.fetch();
 	if err != nil {
 		log.Errorf("Failed to fetch json. %s", err)
-		error = 0
+		error = 1
 	} else {
 		var body pluginsBody
 		err = json.Unmarshal(bodyBytes, &body)
 		if err != nil {
 			log.Errorf("Failed to decode json. %s", err)
-			error = 0
+			error = 1
 		} else {
 			for _, plugin := range body.Plugins {
 				if plugin.OutputPlugin {
@@ -166,6 +172,9 @@ func (e *Exporter) scrape(pluginChan chan <- plugin) {
 	}
 
 	e.error.Set(float64(error))
+	if error == 1 {
+		e.totalErrors.Inc()
+	}
 	e.duration.Set(float64(time.Now().UnixNano() - now) / 1000000000)
 }
 
