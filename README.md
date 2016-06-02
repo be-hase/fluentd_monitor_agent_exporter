@@ -1,6 +1,7 @@
 # fluentd_monitor_agent_exporter
 
-Export Fluentd monitor agent information.
+Export Fluentd monitor agent information.  
+(buffer_queue_length, buffer_total_queued_size, retry_count)
 
 # How to use
 
