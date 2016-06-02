@@ -1,4 +1,4 @@
-# fluentd_exporter
+# fluentd_monitor_agent_exporter
 
 Export Fluentd monitor agent information.  
 (buffer_queue_length, buffer_total_queued_size, retry_count)
@@ -6,7 +6,7 @@ Export Fluentd monitor agent information.
 # How to use
 
 ```
-$ fluentd_exporter
+$ fluentd_monitor_agent_exporter
   -fluentd.endpoint string
         Fluentd monitor agent endpoint. (default "http://localhost:24220")
   -fluentd.timeout duration

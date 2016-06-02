@@ -199,7 +199,7 @@ func main() {
 	flag.Parse()
 
 	if *showVersion {
-		fmt.Printf("Fluentd exporter v%s\n", VERSION)
+		fmt.Printf("Fluentd monitor agent exporter v%s\n", VERSION)
 		return
 	}
 
@@ -209,9 +209,9 @@ func main() {
 	http.Handle(*metricPath, prometheus.Handler())
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte(`<html>
-<head><title>Fluentd exporter</title></head>
+<head><title>Fluentd monitor agent exporter</title></head>
 <body>
-<h1>Fluentd exporter</h1>
+<h1>Fluentd monitor agent exporter</h1>
 <p><a href='` + *metricPath + `'>Metrics</a></p>
 </body>
 </html>`))
