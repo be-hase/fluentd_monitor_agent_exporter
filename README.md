@@ -20,7 +20,7 @@ $ fluentd_monitor_agent_exporter
   -version
         Show version information
   -web.listen-address string
-        Address to listen on for web interface and telemetry. (default ":9121")
+        Address to listen on for web interface and telemetry. (default ":9224")
   -web.telemetry-path string
         Path under which to expose metrics. (default "/metrics")
 ```
