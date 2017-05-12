@@ -18,7 +18,7 @@ var (
 
 	showVersion = flag.Bool("version", false, "Show version information")
 	namespace = flag.String("namespace", "fluentd", "Namespace for metrics.")
-	listenAddress = flag.String("web.listen-address", ":9121", "Address to listen on for web interface and telemetry.")
+	listenAddress = flag.String("web.listen-address", ":9224", "Address to listen on for web interface and telemetry.")
 	metricPath = flag.String("web.telemetry-path", "/metrics", "Path under which to expose metrics.")
 	endpoint = flag.String("fluentd.endpoint", "http://localhost:24220", "Fluentd monitor agent endpoint.")
 	timeout = flag.Duration("fluentd.timeout", 5 * time.Second, "Timeout for trying to get stats from Fluentd.")
